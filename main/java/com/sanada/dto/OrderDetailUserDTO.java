@@ -1,0 +1,66 @@
+package com.sanada.dto;
+
+public class OrderDetailUserDTO {
+	
+	private int id;
+	private String name;
+	private int quantity;
+	private float price;
+	private String img;
+	
+	
+
+	public OrderDetailUserDTO(int id, String name, int quantity, float price, String img) {
+		this.id = id;
+		this.name = name;
+		this.quantity = quantity;
+		this.price = price;
+		this.img = img;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public OrderDetailUserDTO() {
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public int getQuantity() {
+		return quantity;
+	}
+	
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	
+	public float getPrice() {
+		return price;
+	}
+	
+	public void setPrice(float price) {
+		this.price = price;
+	}
+	
+	
+	
+}
