@@ -13,9 +13,6 @@ import com.sanada.entity.Order;
 import com.sanada.entity.Product;
 
 public class OrderDetailDTO {
-	
-
-
   
     private int amount;
     
@@ -24,7 +21,6 @@ public class OrderDetailDTO {
     private OrderDTO order;
     
     private ProductDTO product;
-    
     
 
 	public OrderDetailDTO() {
@@ -67,11 +63,6 @@ public class OrderDetailDTO {
 
 	public void setProduct(ProductDTO product) {
 		this.product = product;
-	}
-	
-	
-    
-	
-    
+	}   
 
 }

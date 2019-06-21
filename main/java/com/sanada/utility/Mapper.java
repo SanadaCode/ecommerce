@@ -87,7 +87,7 @@ public class Mapper {
 		theOrder.setName(order.getProduct().getProductName());
 		theOrder.setQuantity(order.getAmount());
 		theOrder.setDate(order.getOrder().getDate());
-		theOrder.setState(order.getState());
+		theOrder.setState(getDescrizioneFromCodice(order.getState()));
 		theOrder.setAddress(order.getOrder().getUser().getInfo().getAddress());
 		theOrder.setCity(order.getOrder().getUser().getInfo().getCity());
 		theOrder.setCountry(order.getOrder().getUser().getInfo().getCountry());
@@ -99,9 +99,12 @@ public class Mapper {
 		OrderDetailUserDTO theOrder=new OrderDetailUserDTO();
 		theOrder.setName(order.getProduct().getProductName());
 		theOrder.setQuantity(order.getAmount());
+		theOrder.setDesc(order.getProduct().getDesc());
 		theOrder.setImg(order.getProduct().getImg());
 		theOrder.setPrice(order.getProduct().getProductPrice());
 		theOrder.setId(order.getId());
+		String tempState=getDescrizioneFromCodice(order.getState());
+		theOrder.setState(tempState);
 		return theOrder;
 	}
 
@@ -181,6 +184,31 @@ public class Mapper {
 		}
 	}
 	
+	private static String getDescrizioneFromCodice(String cod) {
+		
+		String tempDesc="";
+		if(cod !=null) {
+		switch(cod) {
+		
+		case "cnf":
+			tempDesc= "Confermato";
+			break;
+		case "nbl":
+			tempDesc= "Non disponibile";
+			break;
+		case "anlt": 
+			tempDesc = "Annulato";
+			break;
+		case "cpt": 
+			tempDesc= "Completato";
+			break;
+		case "sdt": 
+			tempDesc = "Spedito";
+			break;
+		}
+	}
+		return tempDesc;
+	}
 	
 	
 	

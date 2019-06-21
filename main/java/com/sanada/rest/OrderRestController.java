@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,6 +36,7 @@ public class OrderRestController {
 	private UserService userService;
 
 	@PostMapping("/add")
+	@CrossOrigin(origins="http://localhost:4200")
 	private ResponseEntity<MessageDTO> addProductToCart(@RequestParam("name") String name, @RequestParam("id") int id,
 			@RequestParam("quantity") int quantity) {
 		if (!this.orderService.isUserAClient(id)) {
@@ -46,6 +48,7 @@ public class OrderRestController {
 	}
 
 	@DeleteMapping("/delete")
+	@CrossOrigin(origins="http://localhost:4200")
 	private ResponseEntity<MessageDTO> deleteProductFromCart(@RequestParam("name") String name,
 			@RequestParam("id") int id) {
 
@@ -59,6 +62,7 @@ public class OrderRestController {
 	}
 
 	@PutMapping("/change")
+	@CrossOrigin(origins="http://localhost:4200")
 	private ResponseEntity<MessageDTO> modifyQuantityInOrder(@RequestParam("name") String name,
 			@RequestParam("id") int id, @RequestParam("quantity") int quantity) {
 
@@ -72,6 +76,7 @@ public class OrderRestController {
 	}
 	
 	@PutMapping("/confirm")
+	@CrossOrigin(origins="http://localhost:4200")
 	private ResponseEntity<MessageDTO> confirmOrder(@RequestParam("id") int id) {
 		
 		if (!this.orderService.isUserAClient(id)) {
@@ -84,6 +89,7 @@ public class OrderRestController {
 	}
 	
 	@GetMapping("/order")
+	@CrossOrigin(origins="http://localhost:4200")
 	private ResponseEntity<List<OrderDTO>> orderOfUser(@RequestParam("id") int id) {
 		if (!this.orderService.isUserAClient(id)) {
 			throw new UserNotAuthorizedException(MessageEnum.NOT_AUTHORIZED.getMessage());
@@ -95,6 +101,7 @@ public class OrderRestController {
 	}
 	
 	@GetMapping("/detail")
+	@CrossOrigin(origins="http://localhost:4200")
 	private ResponseEntity<List<OrderDetailUserDTO>> detailOrder(@RequestParam("id") int id,
 			@RequestParam("orderId") int orderId) {
 		if (!this.orderService.isUserAClient(id)) {
@@ -107,6 +114,7 @@ public class OrderRestController {
 	}
 	
 	@GetMapping("/cart")
+	@CrossOrigin(origins="http://localhost:4200")
 	private ResponseEntity<List<OrderDetailUserDTO>> detailOrder(@RequestParam("id") int id) {
 		if (!this.orderService.isUserAClient(id)) {
 			throw new UserNotAuthorizedException(MessageEnum.NOT_AUTHORIZED.getMessage());
@@ -118,6 +126,7 @@ public class OrderRestController {
 	}
 	
 	@GetMapping("/seller")
+	@CrossOrigin(origins="http://localhost:4200")
 	private ResponseEntity<List<OrderSellerDTO>> orderForSeller(@RequestParam("id") int id) {
 		if (!this.userService.authorizedSeller(id)) {
 			throw new UserNotAuthorizedException(MessageEnum.NOT_AUTHORIZED.getMessage());
@@ -129,6 +138,7 @@ public class OrderRestController {
 	}
 	
 	@DeleteMapping("/cancel")
+	@CrossOrigin(origins="http://localhost:4200")
 	private ResponseEntity<MessageDTO> cancelOrderForProduct(@RequestParam("id") int id,
 			@RequestParam("orderId") int orderId) {
 		if (!this.userService.foundUser(id)) {
@@ -141,6 +151,7 @@ public class OrderRestController {
 	}
 	
 	@PutMapping("/send")
+	@CrossOrigin(origins="http://localhost:4200")
 	private ResponseEntity<MessageDTO> setOrderToSent(@RequestParam("id") int id,
 			@RequestParam("orderId") int orderId) {
 		if (!this.userService.foundUser(id)) {

@@ -10,6 +10,7 @@ import com.sanada.error.MessageError;
 import com.sanada.error.ProductNotFoundException;
 import com.sanada.error.UserNotAuthorizedException;
 import com.sanada.error.UserNotFoundException;
+import com.sanada.model.MessageEnum;
 
 @ControllerAdvice
 public class RestExceptionHandler {
@@ -73,7 +74,7 @@ public class RestExceptionHandler {
 		
 		MessageError error= new MessageError();
 		error.setStatus(HttpStatus.BAD_REQUEST.value());
-		error.setMessage(ex.getMessage());
+		error.setMessage(MessageEnum.GENERIC.getMessage());
 		error.setTimeStamp(System.currentTimeMillis());
 		
 		// return ResponseEntity		

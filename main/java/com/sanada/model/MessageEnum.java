@@ -10,10 +10,12 @@ public enum MessageEnum {
 	NOT_EVERY_PRODUCT_AVALAIBLE("Non tutti i prodotti erano disponibili"),
 	IMPOSSIBLE_TO_DELETE("Non è possibile cancellare l'ordine"),
 	IMPOSSIBLE_TO_SEND("Non è possibile spedire l'ordine"),
+	CART_EMPTY("Il carrello è vuoto!"),
+	GENERIC("Qualcosa non ha funzionato"),
 	USER_NOT_FOUND("Utente non trovato!");
 	
 	
-	 public final String message;
+	 private final String message;
 	 
 	 private  MessageEnum(String message) {
 		 this.message=message;

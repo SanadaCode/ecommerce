@@ -57,7 +57,11 @@ public class OrderService {
 		Product product=getProductIfExist(name);
 		Order order = this.getCartOfUser(id);
 		if (alreadyProductInCart(order, product)) {
-			throw new BadInputException(MessageEnum.PRODUCT_ALREADY_IN_CART.getMessage());
+			System.out.println("qui");
+			OrderDetail orderDetail = this.orderDetailRepository.getProductOfOrder(order, product);
+			int amount = orderDetail.getAmount() + quantity;
+			updatePrice(amount, order, product, orderDetail);
+			this.orderDetailRepository.save(orderDetail);
 		} else {
 			if(productQuantityIsRight(quantity, name)) {
 				OrderDetail orderDetail = setOrderDetail(quantity, product, order);
@@ -75,7 +79,7 @@ public class OrderService {
 		Order order = this.getCartOfUser(id);
 		Product product= getProductIfExist(name);
 		if (!alreadyProductInCart(order, product)) {
-			throw new BadInputException(MessageEnum.PRODUCT_ALREADY_IN_CART.getMessage());
+			throw new BadInputException(MessageEnum.PRODUCT_NOT_FOUND.getMessage());
 		} else {
 			OrderDetail orderDetail= this.orderDetailRepository.getProductOfOrder(order, product);
 			updatePrice(quantity, order, product, orderDetail);
@@ -102,7 +106,9 @@ public class OrderService {
 			return new MessageDTO(MessageEnum.SUCCES.getMessage());
 		}
 	}
-
+/*
+ * questo metodo aggiorna
+ */
 	private void updatePrice(int quantity, Order order, Product product, OrderDetail orderDetail) {
 		float pastPrice= product.getProductPrice() * orderDetail.getAmount();
 		float newPrice = product.getProductPrice() * quantity;
@@ -123,7 +129,6 @@ public class OrderService {
 				Product product = orderDetail.getProduct();
 				if(productQuantityIsRight(amount, 
 						orderDetail.getProduct().getProductName())) {
-					System.out.println("qui" + order);
 					product.setQuantity(quantity-amount);
 					orderDetail.setState(StateOfOrder.CONFERMATO.getCod());
 					total = total +(amount * product.getProductPrice());
@@ -136,7 +141,7 @@ public class OrderService {
 				this.orderDetailRepository.save(orderDetail);
 			}
 		}else {
-			throw new  ProductNotFoundException("Nessun prodototo nel carrello!");
+			throw new  ProductNotFoundException(MessageEnum.CART_EMPTY.getMessage());
 		}
 		
 		return new MessageDTO(message);
@@ -226,18 +231,27 @@ public class OrderService {
 		Order theOrder = order.getOrder();
 		List<OrderDetail> orders = this.orderDetailRepository.findByOrder(theOrder);
 		boolean flag = true;
+		boolean annulato = false;
 		for (OrderDetail orderDetail : orders) {
 			if(orderDetail.getState() == null ||
 					orderDetail.getState().equals(StateOfOrder.CONFERMATO.getCod())) {
 				flag=false;
 			}
+			if(!orderDetail.getState().equals(StateOfOrder.ANNULATO.getCod())) {
+				annulato=true;
+			}
+			
 		}
-		if(flag) {
+		if(flag && annulato ) {
 			theOrder.setState(
 					this.stateOrderRepository.findByCod(StateOfOrder.COMPLETO.getCod()));
 			this.orderRepository.save(theOrder);
 		}
-		
+		if(!annulato) {
+			theOrder.setState(
+					this.stateOrderRepository.findByCod(StateOfOrder.ANNULATO.getCod()));
+			this.orderRepository.save(theOrder);
+		}
 	}
 	
 	private OrderDetail setOrderDetail(int quantity, Product product, Order order) {
@@ -291,7 +305,7 @@ public class OrderService {
 	private boolean productQuantityIsRight(int quantity, String name) {
 		Product product = this.productRepository.findByProductName(name);
 		int amount = product.getQuantity();
-		if (quantity <= amount) {
+		if (quantity <= amount && quantity>0) {
 			return true;
 		} else {
 			return false;
@@ -311,5 +325,4 @@ public class OrderService {
 		}
 	}
 	
-
 }
