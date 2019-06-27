@@ -60,8 +60,12 @@ public class OrderService {
 			System.out.println("qui");
 			OrderDetail orderDetail = this.orderDetailRepository.getProductOfOrder(order, product);
 			int amount = orderDetail.getAmount() + quantity;
-			updatePrice(amount, order, product, orderDetail);
-			this.orderDetailRepository.save(orderDetail);
+			if(productQuantityIsRight(amount, name)) {
+				updatePrice(amount, order, product, orderDetail);
+				this.orderDetailRepository.save(orderDetail);
+			}else {
+				throw new BadInputException(MessageEnum.PRODUCT_NOT_ENOUGH.getMessage());
+			}
 		} else {
 			if(productQuantityIsRight(quantity, name)) {
 				OrderDetail orderDetail = setOrderDetail(quantity, product, order);
