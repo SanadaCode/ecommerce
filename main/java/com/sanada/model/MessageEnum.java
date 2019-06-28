@@ -12,6 +12,7 @@ public enum MessageEnum {
 	IMPOSSIBLE_TO_SEND("Non è possibile spedire l'ordine"),
 	CART_EMPTY("Il carrello è vuoto!"),
 	GENERIC("Qualcosa non ha funzionato"),
+	PRODUCT_ALREADY_EXIST("Il prodotto esiste già"),
 	USER_NOT_FOUND("Utente non trovato!");
 	
 	

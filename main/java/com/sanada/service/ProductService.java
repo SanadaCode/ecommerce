@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.sanada.dto.ProductDTO;
 import com.sanada.entity.Product;
 import com.sanada.entity.User;
+import com.sanada.error.BadInputException;
 import com.sanada.error.ProductNotFoundException;
 import com.sanada.model.MessageDTO;
 import com.sanada.model.MessageEnum;
@@ -30,12 +31,15 @@ public class ProductService {
 		this.userRepository = userRepository;
 	}
 	
-	public MessageDTO addProduct(ProductDTO product,int id) {
+	public MessageDTO addProduct(ProductDTO product,int id, String name , String type) {
 		
 		User user= this.userRepository.findById(id);
 		MessageDTO message;
 		Product theProduct = new Product();
-		Mapper.setDataProduct(theProduct,product);
+		if(this.productRepository.findByProductName(product.getProductName()) != null) {
+			throw new BadInputException(MessageEnum.PRODUCT_ALREADY_EXIST.getMessage());
+		}
+		Mapper.setDataProduct(theProduct,product, name , type);
 		theProduct.setVenditoreId(id);
 		theProduct.setDeleted(true);
 		this.productRepository.save(theProduct);
@@ -43,7 +47,7 @@ public class ProductService {
 		return  message;
 	}
 	
-	public MessageDTO editProduct(ProductDTO product,int id,String name) {
+	public MessageDTO editProduct(ProductDTO product,int id,String name, String nameFile , String type) {
 		
 		User user= this.userRepository.findById(id);
 		MessageDTO message;
@@ -52,9 +56,10 @@ public class ProductService {
 		if(!Checker.isDeleted(tempProduct)) {
 			throw new ProductNotFoundException(MessageEnum.PRODUCT_NOT_FOUND.getMessage());
 		}
-		Mapper.setDataProduct(tempProduct , product);
+		Mapper.setDataProduct(tempProduct , product, nameFile , type);
 		System.out.println(tempProduct);
 		this.productRepository.save(tempProduct);
+		System.out.println(nameFile);
 		message= new MessageDTO(MessageEnum.SUCCES.getMessage());
 		return message;
 	}

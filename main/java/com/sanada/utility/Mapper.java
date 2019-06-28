@@ -1,6 +1,18 @@
 package com.sanada.utility;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.sanada.dto.InformationUserDTO;
 import com.sanada.dto.OrderDTO;
@@ -21,8 +33,11 @@ import com.sanada.entity.StateOrder;
 import com.sanada.entity.Transaction;
 import com.sanada.entity.User;
 import com.sanada.error.BadInputException;
+import com.sanada.model.MessageEnum;
 
 public class Mapper {
+	
+	private static final String UPLOADED_FOLDER= "C:\\Users\\davide.borgato\\Documents\\image\\";
 
 	public static UserDTO UserToUserDTO(User user) {
 		int id = user.getId();
@@ -100,7 +115,7 @@ public class Mapper {
 		theOrder.setName(order.getProduct().getProductName());
 		theOrder.setQuantity(order.getAmount());
 		theOrder.setDesc(order.getProduct().getDesc());
-		theOrder.setImg(order.getProduct().getImg());
+		theOrder.setImg(Mapper.getImageBase64(order.getProduct().getImg()));
 		theOrder.setPrice(order.getProduct().getProductPrice());
 		theOrder.setId(order.getId());
 		String tempState=getDescrizioneFromCodice(order.getState());
@@ -108,10 +123,9 @@ public class Mapper {
 		return theOrder;
 	}
 
-
 	public static ProductDTO ProductToProductDTO(Product product) {
 		String desc = product.getDesc();
-		String img = product.getImg();
+		String img = Mapper.getImageBase64(product.getImg());
 		String productName = product.getProductName();
 		int quantity = product.getQuantity();
 		float productPrice = product.getProductPrice();
@@ -151,7 +165,7 @@ public class Mapper {
 		}
 	}
 	
-	public static Product setDataProduct(Product theProduct,ProductDTO product) {
+	public static Product setDataProduct(Product theProduct,ProductDTO product, String name , String type) {
 		if(product == null) {
 			throw new BadInputException("Input vuoto");
 		}
@@ -162,11 +176,14 @@ public class Mapper {
 		if(product.getDesc().trim() != ""){
 			theProduct.setDesc(product.getDesc());
 		}
-		if(product.getImg().trim() != null && product.getImg().trim() != ""){
-			theProduct.setImg(product.getImg());
-		}
 		if(product.getProductName().trim() != ""){
 			theProduct.setProductName(product.getProductName());
+		}else {
+			throw new BadInputException("Uno o più valori inseriti non sono validi!");
+		}
+		if(product.getImg().trim() != null && product.getImg().trim() != ""){
+			theProduct.setImg(
+					Mapper.saveImageFromBase64(product.getImg(), name, type));
 		}
 		theProduct.setProductPrice(product.getProductPrice());
 		theProduct.setQuantity(product.getQuantity());
@@ -211,6 +228,37 @@ public class Mapper {
 	}
 	
 	
+	public static String saveImageFromBase64(String base64URL, String name, String type) {	
+    	try {
+    		Date date = new Date();
+    		String[] onlyBase64= base64URL.split(",");
+    		byte[] decoded = Base64.decodeBase64(onlyBase64[1]);
+    		String tempName= name +  System.currentTimeMillis() + "." +type;
+    		ByteArrayInputStream bis = new ByteArrayInputStream(decoded);
+    		BufferedImage image =ImageIO.read(new ByteArrayInputStream(decoded)); 
+    		File outputfile = new File(UPLOADED_FOLDER + tempName);
+    		ImageIO.write(image, type , outputfile);
+    		return tempName;	
+		} catch (Exception e) {
+			throw new BadInputException(MessageEnum.GENERIC.getMessage());
+		}
+    }
 	
+	public static String getImageBase64(String path) {
+    	try {
+    		String base64=null;
+    		File outputfile = new File(UPLOADED_FOLDER + path);
+    		int index = path.indexOf(".") +1;
+    		String type = path.substring(index  ,path.length());
+    		BufferedImage image= ImageIO.read(outputfile);
+    		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    		ImageIO.write(image, type , bos);
+    		byte [] data = bos.toByteArray();
+    		base64 = Base64.encodeBase64String(data);
+    		return base64;
+    	} catch (Exception e) {
+    		throw new BadInputException(e.getMessage());
+    	}
+    }
 	
 }

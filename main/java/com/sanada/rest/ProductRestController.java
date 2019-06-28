@@ -42,12 +42,14 @@ public class ProductRestController {
 	
 	@PostMapping("/add")
 	public ResponseEntity<MessageDTO> addProduct(@RequestBody ProductDTO product,
-			@RequestParam("id") int id) {
+			@RequestParam("id") int id, 
+			@RequestParam("name") String name , 
+			@RequestParam("type") String type ) {
 		if(!this.userService.authorizedSeller(id)) {
 			throw new UserNotAuthorizedException(MessageEnum.NOT_AUTHORIZED.getMessage());
 		}
 		
-		return new ResponseEntity<MessageDTO>(this.productService.addProduct(product, id),null,HttpStatus.OK);
+		return new ResponseEntity<MessageDTO>(this.productService.addProduct(product, id , name , type),null,HttpStatus.OK);
 	}
 	
 	@GetMapping("/seller")
@@ -90,14 +92,17 @@ public class ProductRestController {
 	
 	@PutMapping("/edit")
 	public ResponseEntity<MessageDTO> editProductsByName(@RequestParam("id") int id, 
-			@RequestParam("name") String name,@RequestBody ProductDTO product){
+			@RequestParam("name") String name,
+			@RequestParam("nameFile") String nameFile ,
+			@RequestParam("type") String type,
+			@RequestBody ProductDTO product){
 		if(!this.userService.authorizedSeller(id)) {
 			throw new UserNotAuthorizedException(MessageEnum.NOT_AUTHORIZED.getMessage());
 		}else if(!this.productService.isProductOfSeller(id, name)) {
 			throw new UserNotAuthorizedException(MessageEnum.NOT_AUTHORIZED.getMessage());
 			
 		}
-		return new ResponseEntity<MessageDTO>(this.productService.editProduct(product, id, name),null,HttpStatus.OK);
+		return new ResponseEntity<MessageDTO>(this.productService.editProduct(product, id, name, nameFile, type),null,HttpStatus.OK);
 		
 	}
 	

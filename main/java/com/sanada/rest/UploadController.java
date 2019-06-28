@@ -54,9 +54,8 @@ public class UploadController {
     @CrossOrigin(origins="http://localhost:4200")
     public void test(@RequestBody() String test) {
     	
-    	
     	String[] base64= test.split(",");
-    	
+    	System.out.println(base64[0]);
     	byte[] enc = Base64.decodeBase64(base64[1]);
     	Path path = Paths.get(UPLOADED_FOLDER + "test");
     	try {
@@ -69,7 +68,6 @@ public class UploadController {
     		System.out.println(ImageIO.write(image2, "jpeg", bos));
     		System.out.println(bos.size());
     		byte [] data = bos.toByteArray();
-    		System.out.println("qui: " + Base64.encodeBase64String(data));
     		
 		} catch (Exception e) {
 			System.out.println( e);
@@ -79,13 +77,10 @@ public class UploadController {
     @GetMapping("/test2") // //new annotation since 4.3
     @CrossOrigin(origins="http://localhost:4200")
     public String test2() {
-    	
-    	
-    	
     	String base64=null;
     	Path path = Paths.get(UPLOADED_FOLDER + "test");
     	try {
-    		File outputfile = new File(UPLOADED_FOLDER + "test1");
+    		File outputfile = new File(UPLOADED_FOLDER + "test");
     		BufferedImage image2 = ImageIO.read(outputfile);
     		ByteArrayOutputStream bos = new ByteArrayOutputStream();
     		ImageIO.write(image2, "jpeg", bos);
@@ -94,6 +89,6 @@ public class UploadController {
     	} catch (Exception e) {
     		System.out.println( e);
     	}
-    	return base64;
+    	return  base64;
     }
 }
