@@ -4,15 +4,12 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.sanada.dto.InformationUserDTO;
 import com.sanada.dto.OrderDTO;
@@ -68,6 +65,9 @@ public class Mapper {
 		String phone=info.getPhone();
 		String cap=info.getCap();
 		InformationUserDTO tempInfo= new InformationUserDTO(lastName, firstName, address, country, city, phone, cap);
+		if(info.getImage() != null) {
+			tempInfo.setImage(Mapper.getImageBase64(info.getImage()));
+		}
 		return tempInfo;
 	}
 	
@@ -133,7 +133,7 @@ public class Mapper {
 		return theProduct;
 	}
 
-	public static void getInformationFromInformationDTO(InformationUserDTO info, InformazioniUtente infoUtente) {
+	public static void getInformationFromInformationDTO(InformationUserDTO info, InformazioniUtente infoUtente, String name, String type) {
 		if(info ==null) {
 			throw new BadInputException("Input vuoto");
 		}
@@ -163,6 +163,14 @@ public class Mapper {
 		if (info.getPhone().trim() != "" && info.getPhone() != null && info.getPhone().length() <= 10) {
 			infoUtente.setPhone(info.getPhone());
 		}
+		if(info.getImage() != null) {
+			if(infoUtente.getImage() == null) {
+				
+				infoUtente.setImage(Mapper.saveImageFromBase64(info.getImage(), name, type));
+			}else {
+				infoUtente.setImage(Mapper.saveImageFromBase64(info.getImage(), name, type, infoUtente.getImage()));
+			}
+		}
 	}
 	
 	public static Product setDataProduct(Product theProduct,ProductDTO product, String name , String type) {
@@ -181,9 +189,15 @@ public class Mapper {
 		}else {
 			throw new BadInputException("Uno o più valori inseriti non sono validi!");
 		}
+		System.out.println("qua");
+		if(product.getImg() !=null) {
 		if(product.getImg().trim() != null && product.getImg().trim() != ""){
-			theProduct.setImg(
-					Mapper.saveImageFromBase64(product.getImg(), name, type));
+				if(theProduct.getImg() == null) {	
+					theProduct.setImg(Mapper.saveImageFromBase64(product.getImg(), name, type));
+				}else {
+					theProduct.setImg(Mapper.saveImageFromBase64(product.getImg(), name, type, theProduct.getImg()));
+				}
+			}
 		}
 		theProduct.setProductPrice(product.getProductPrice());
 		theProduct.setQuantity(product.getQuantity());
@@ -214,7 +228,7 @@ public class Mapper {
 			tempDesc= "Non disponibile";
 			break;
 		case "anlt": 
-			tempDesc = "Annulato";
+			tempDesc = "Annullato";
 			break;
 		case "cpt": 
 			tempDesc= "Completato";
@@ -243,6 +257,23 @@ public class Mapper {
 			throw new BadInputException(MessageEnum.GENERIC.getMessage());
 		}
     }
+	public static String saveImageFromBase64(String base64URL, String name, String type, String pastImage) {	
+		try {
+			Date date = new Date();
+			String[] onlyBase64= base64URL.split(",");
+			byte[] decoded = Base64.decodeBase64(onlyBase64[1]);
+			String tempName= name +  System.currentTimeMillis() + "." +type;
+			ByteArrayInputStream bis = new ByteArrayInputStream(decoded);
+			BufferedImage image =ImageIO.read(new ByteArrayInputStream(decoded)); 
+			File outputfile = new File(UPLOADED_FOLDER + tempName);
+			ImageIO.write(image, type , outputfile);
+			outputfile = new File(UPLOADED_FOLDER + pastImage);
+			outputfile.delete();
+			return tempName;	
+		} catch (Exception e) {
+			throw new BadInputException(MessageEnum.GENERIC.getMessage());
+		}
+	}
 	
 	public static String getImageBase64(String path) {
     	try {
@@ -257,7 +288,7 @@ public class Mapper {
     		base64 = Base64.encodeBase64String(data);
     		return base64;
     	} catch (Exception e) {
-    		throw new BadInputException(e.getMessage());
+    		return null;
     	}
     }
 	

@@ -20,7 +20,7 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Intege
 	List<OrderDetail>  findExistingOrder(Order order, String cod);
 	
 	@Query("Select o From OrderDetail o where o.product.venditoreId=:id "
-			+ "and o.order.state.cod!=:cod ")
+			+ "and o.order.state.cod!=:cod order by o.order.date DESC")
 	List<OrderDetail> findOrderForSeller(int id, String cod);
 	
 	OrderDetail findById(int id);

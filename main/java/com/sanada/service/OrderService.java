@@ -141,6 +141,8 @@ public class OrderService {
 					message=MessageEnum.NOT_EVERY_PRODUCT_AVALAIBLE.getMessage();
 				}
 				order.setState(this.stateOrderRepository.findByCod(StateOfOrder.CONFERMATO.getCod()));
+				Date date= new Date();
+				order.setDate(date);
 				order.getTransaction().setPrice(total);
 				this.orderDetailRepository.save(orderDetail);
 			}

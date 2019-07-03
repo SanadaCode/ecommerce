@@ -41,7 +41,7 @@ public class UserRest {
 				System.out.println("save");
 				if(this.userService.foundUser(id)) {
 					return new ResponseEntity<InformationUserDTO>(
-							this.userService.saveInformatioUser(id, info),
+							this.userService.saveInformatioUser(id, info, null, null),
 							null,
 							HttpStatus.OK);
 				}else {
@@ -52,11 +52,14 @@ public class UserRest {
 	
 	@PutMapping("/edit")
 	public ResponseEntity<InformationUserDTO> editInformationUser(@RequestParam("id") int id,
+			@RequestParam("name") String name,
+			@RequestParam("type") String type,
 			@RequestBody InformationUserDTO info) {
+		System.out.println("image: "+info.getImage());
 		System.out.println("edit");
 		if(this.userService.foundUser(id)) {
 			return new ResponseEntity<InformationUserDTO>(
-					this.userService.saveInformatioUser(id, info),
+					this.userService.saveInformatioUser(id, info, name , type),
 					null,
 					HttpStatus.OK);
 		}else {

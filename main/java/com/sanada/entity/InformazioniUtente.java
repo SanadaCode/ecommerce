@@ -40,21 +40,34 @@ public class InformazioniUtente {
     @Column(name="Cap", nullable=false)
 	private String cap;
 	
+    @Column(name="Image")
+    private String image;
 	
 
 	public InformazioniUtente() {
 	}
 
-	public InformazioniUtente(int id, String lastName, String fistName, String address, String country, String city, String phone,
-			String cap) {
+
+	public InformazioniUtente(int id, String lastName, String firstName, String address, String country, String city,
+			String phone, String cap, String image) {
+		super();
 		this.id = id;
 		this.lastName = lastName;
-		this.firstName = fistName;
+		this.firstName = firstName;
 		this.address = address;
 		this.country = country;
 		this.city = city;
 		this.phone = phone;
 		this.cap = cap;
+		this.image = image;
+	}
+	
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public int getId() {
@@ -126,7 +139,5 @@ public class InformazioniUtente {
 		return "Info [id=" + id + ", lastName=" + lastName + ", fistName=" + firstName + ", address=" + address
 				+ ", country=" + country + ", city=" + city + ", phone=" + phone + ", cap=" + cap + "]";
 	}
-    
-	
     
 }

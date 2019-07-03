@@ -6,6 +6,7 @@ public class LoginDTO {
 	private String cod;
 	private String name;
 	private String surname;
+	private String image;
 	
 	
 	public LoginDTO() {
@@ -25,6 +26,26 @@ public class LoginDTO {
 	}
 
 	
+	
+	public LoginDTO(int id, String cod, String name, String surname, String image) {
+		super();
+		this.id = id;
+		this.cod = cod;
+		this.name = name;
+		this.surname = surname;
+		this.image = image;
+	}
+	
+	
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	public String getName() {
 		return name;
 	}

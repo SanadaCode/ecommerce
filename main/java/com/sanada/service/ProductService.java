@@ -48,7 +48,7 @@ public class ProductService {
 	}
 	
 	public MessageDTO editProduct(ProductDTO product,int id,String name, String nameFile , String type) {
-		
+		System.out.println("qua");
 		User user= this.userRepository.findById(id);
 		MessageDTO message;
 		Product tempProduct= this.productRepository.findByProductName(name);
@@ -57,9 +57,7 @@ public class ProductService {
 			throw new ProductNotFoundException(MessageEnum.PRODUCT_NOT_FOUND.getMessage());
 		}
 		Mapper.setDataProduct(tempProduct , product, nameFile , type);
-		System.out.println(tempProduct);
 		this.productRepository.save(tempProduct);
-		System.out.println(nameFile);
 		message= new MessageDTO(MessageEnum.SUCCES.getMessage());
 		return message;
 	}

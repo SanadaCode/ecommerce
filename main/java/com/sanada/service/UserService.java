@@ -37,14 +37,14 @@ public class UserService {
 		return log;
 	}
 	
-	public InformationUserDTO saveInformatioUser(int id, InformationUserDTO info) {
+	public InformationUserDTO saveInformatioUser(int id, InformationUserDTO info, String name , String type) {
 		
 		User user = this.userRepository.findById(id);
 		InformazioniUtente infoUtente = new InformazioniUtente();
 		if(user.getInfo() != null) {
 			infoUtente = user.getInfo();
 		}
-		Mapper.getInformationFromInformationDTO(info, infoUtente);
+		Mapper.getInformationFromInformationDTO(info, infoUtente, name , type);
 		user.setInfo(infoUtente);
 		this.userRepository.save(user);
 		return info;

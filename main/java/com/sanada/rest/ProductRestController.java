@@ -93,15 +93,19 @@ public class ProductRestController {
 	@PutMapping("/edit")
 	public ResponseEntity<MessageDTO> editProductsByName(@RequestParam("id") int id, 
 			@RequestParam("name") String name,
-			@RequestParam("nameFile") String nameFile ,
+			@RequestParam("nameFile") String nameFile,
 			@RequestParam("type") String type,
 			@RequestBody ProductDTO product){
+		
 		if(!this.userService.authorizedSeller(id)) {
+			System.out.println("quai");
 			throw new UserNotAuthorizedException(MessageEnum.NOT_AUTHORIZED.getMessage());
 		}else if(!this.productService.isProductOfSeller(id, name)) {
+			System.out.println("qua");
 			throw new UserNotAuthorizedException(MessageEnum.NOT_AUTHORIZED.getMessage());
 			
 		}
+		System.out.println("qua");
 		return new ResponseEntity<MessageDTO>(this.productService.editProduct(product, id, name, nameFile, type),null,HttpStatus.OK);
 		
 	}

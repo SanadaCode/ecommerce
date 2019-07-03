@@ -24,7 +24,6 @@ public class LoginService {
 	public LoginDTO login(String mail, String pass) {
 		UserDTO tempUser =Mapper.UserToUserDTO(this.loginRepository.findByCustomer(mail, pass));
 		
-		System.out.println(tempUser);
 		if(tempUser == null) {
 			throw new UserNotFoundException("User not found ");
 		}
@@ -33,10 +32,14 @@ public class LoginService {
 			
 			tempLog= new LoginDTO(tempUser.getId(),tempUser.getRole().getCod()
 					,tempUser.getInfo().getFirstName(), tempUser.getInfo().getLastName());
+			if(tempUser.getInfo().getImage() != null) {
+				tempLog.setImage(tempUser.getInfo().getImage());
+			}
 		}else{
 			tempLog= new LoginDTO(tempUser.getId(),tempUser.getRole().getCod()
 					,null, null);
 		}
+		
 		return tempLog;
 	}
 }

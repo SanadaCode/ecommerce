@@ -18,6 +18,7 @@ public class InformationUserDTO {
 
 	private String cap;
 	
+	private String image;
 	
 	public InformationUserDTO() {
 	}
@@ -33,6 +34,14 @@ public class InformationUserDTO {
 		this.city = city;
 		this.phone = phone;
 		this.cap = cap;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public String getLastName() {
