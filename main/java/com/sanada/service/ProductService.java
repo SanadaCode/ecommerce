@@ -48,7 +48,6 @@ public class ProductService {
 	}
 	
 	public MessageDTO editProduct(ProductDTO product,int id,String name, String nameFile , String type) {
-		System.out.println("qua");
 		User user= this.userRepository.findById(id);
 		MessageDTO message;
 		Product tempProduct= this.productRepository.findByProductName(name);

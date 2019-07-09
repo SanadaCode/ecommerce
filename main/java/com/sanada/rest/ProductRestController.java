@@ -98,10 +98,8 @@ public class ProductRestController {
 			@RequestBody ProductDTO product){
 		
 		if(!this.userService.authorizedSeller(id)) {
-			System.out.println("quai");
 			throw new UserNotAuthorizedException(MessageEnum.NOT_AUTHORIZED.getMessage());
 		}else if(!this.productService.isProductOfSeller(id, name)) {
-			System.out.println("qua");
 			throw new UserNotAuthorizedException(MessageEnum.NOT_AUTHORIZED.getMessage());
 			
 		}

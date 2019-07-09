@@ -35,8 +35,6 @@ public class LoginDTO {
 		this.surname = surname;
 		this.image = image;
 	}
-	
-	
 
 	public String getImage() {
 		return image;
@@ -77,7 +75,6 @@ public class LoginDTO {
 	public void setCod(String cod) {
 		this.cod = cod;
 	}
-	
 	
 	
 }
